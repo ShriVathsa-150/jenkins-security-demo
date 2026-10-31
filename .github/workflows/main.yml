@@ -1,0 +1,41 @@
+
+name: Python Security Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install bandit pip-audit
+
+      - name: Build Application
+        run: python app.py
+
+      - name: Run Unit Tests
+        run: python -m unittest test_app.py
+
+      - name: SAST Scan - Bandit
+        run: bandit -r app.py
+
+      - name: SCA Scan - pip-audit
+        run: pip-audit -r requirements.txt
+
+      - name: Security Complete
+        run: echo "Security checks completed!"
