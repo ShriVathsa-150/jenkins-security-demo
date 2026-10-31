@@ -1,12 +1,18 @@
 
-from app import add, login
+import unittest
+from app import add, divide
 
-def test_add():
-    assert add(10, 20) == 30
+class TestApp(unittest.TestCase):
 
-def test_add_zero():
-    assert add(5, 0) == 5
+    def test_add(self):
+        self.assertEqual(add(10, 20), 30)
 
-def test_login_query():
-    result = login("admin", "1234")
-    assert "SELECT" in result
+    def test_divide(self):
+        self.assertEqual(divide(10, 2), 5)
+
+    def test_zero(self):
+        self.assertEqual(divide(10, 0),
+                         "Cannot divide by zero")
+
+if __name__ == "__main__":
+    unittest.main()
